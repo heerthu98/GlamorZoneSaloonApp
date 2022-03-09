@@ -13,15 +13,15 @@ export default function ViewGallery() {
 
   useEffect(() => {
     const articleRef = collection(db, 'Gallery');
-    const q = query(articleRef, orderBy('createdAt', 'desc'));
+    const q = query(articleRef);
     onSnapshot(q, (snapshot) => {
-      // console.log(snapshot);
       const articles = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setArticles(articles);
       console.log(articles);
+      setArticles(articles);
+      // console.log(articles);
     });
   }, []);
   return (

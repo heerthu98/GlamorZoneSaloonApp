@@ -73,7 +73,7 @@ export const PageTitle = styled.Text`
   text-align: center;
   font-weight: bold;
   color: ${brand};
-  padding: 10px;
+  padding: 5px;
 
   ${(props) =>
     props.welcome &&
@@ -110,7 +110,7 @@ export const StyledTextInput = styled.TextInput`
   padding-right: 55px;
   border-radius: 5px;
   font-size: 16px;
-  height: 60px;
+  height: 50px;
   margin-vertical: 3px;
   margin-bottom: 10px;
   color: ${tertiary};
@@ -200,7 +200,7 @@ export const ExtraView = styled.View`
   justify-content: center;
   flex-direction: row;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
 `;
 
 export const ExtraText = styled.Text`

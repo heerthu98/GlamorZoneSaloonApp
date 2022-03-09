@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { db } from '../../firebase';
 
 import {
   KeyboardAvoidingView,
@@ -16,65 +15,40 @@ import {
 } from 'react-native';
 import { GoBackLeft } from '../../components/styles';
 import { Icon } from 'react-native-elements';
-import { collection, query, orderBy, onSnapshot, doc } from 'firebase/firestore';
-import ViewPastAppointments from './ViewPastAppointments';
 
-const AdminPastAppointment = () => {
+export default function ViewPastAppointments({ user, date, category, price, time, id }) {
   const navigation = useNavigation();
-
-  const [appointments, setAppointments] = useState([]);
-  useEffect(() => {
-    const appointmentsRef = collection(db, 'Booking');
-    const q = query(appointmentsRef, orderBy('date', 'asc'));
-
-    onSnapshot(q, (snapshot) => {
-      const appointments = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setAppointments(appointments);
-      console.log(appointments);
-    });
-  }, []);
 
   return (
     <>
       <StatusBar style="light" />
-      <View style={styles.Innercontainer}>
-        <GoBackLeft>
-          <Icon
-            style={styles.gobackBtn}
-            name="arrow-back-outline"
-            type="ionicon"
-            color="#808080"
-            size={26}
-            onPress={() => navigation.replace('AdminCommon')}
-          />
-        </GoBackLeft>
-        <View style={styles.headercontainer}>
-          <Image style={styles.GlamorZone} resizeMode="cover" source={require('../../assets/img/img2.jpg')} />
-          <Text style={styles.PageTitle}>Total Appointments</Text>
-        </View>
+      <View>
         <ScrollView>
-          {appointments.map((s) => {
-            return (
-              <ViewPastAppointments
-                key={s.id}
-                user={s.user}
-                category={s.category}
-                date={s.date}
-                price={s.price}
-                time={s.time}
-              />
-            );
-          })}
+          <View style={styles.ExtraViewSelect}>
+            <View style={styles.ExtraView}>
+              <Text style={styles.PageTitle1}>Customer Name: {user} </Text>
+              <Text style={styles.PageTitle1}>Date: {date}</Text>
+            </View>
+            <View style={styles.ExtraView}>
+              {/* <View style={styles.ExtraViewSub}> */}
+              <Text style={styles.PageTitle1}>Services</Text>
+              <Text style={styles.PageTitle2}>Total: Rs.3500 </Text>
+            </View>
+            <View style={styles.Line} />
+            <ScrollView>
+              <View style={styles.ExtraViewSub}>
+                <Text style={styles.subTitle2}>{category}</Text>
+                <Text style={styles.subTitle3}>Rs.{price}</Text>
+                <Text style={styles.subTitle4}>{time}</Text>
+              </View>
+            </ScrollView>
+          </View>
         </ScrollView>
       </View>
     </>
   );
-};
+}
 
-export default AdminPastAppointment;
 const styles = StyleSheet.create({
   Innercontainer: {
     flex: 1,
@@ -137,7 +111,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#E56717',
     paddingBottom: 5,
-    left: 100,
+    left: 180,
     top: 17,
     position: 'absolute',
     zIndex: 1,

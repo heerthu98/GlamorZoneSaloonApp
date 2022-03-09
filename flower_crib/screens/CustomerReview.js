@@ -34,7 +34,7 @@ export default function CustomerReview() {
           <Text style={styles.viewTitle}>All Review ({Reviews.length})</Text>
           {Reviews.map((s) => {
             return (
-              <ReviewView key={s.id} review={s.review} name={s.name} ratting={s.ratting} createdate={s.createdate} />
+              <ReviewView key={s.id} review={s.review} user={s.user} ratting={s.ratting} createdate={s.createdate} />
             );
           })}
         </ScrollView>

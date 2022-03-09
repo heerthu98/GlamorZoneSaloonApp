@@ -15,31 +15,32 @@ import {
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Icon } from 'react-native-elements';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function AddReview() {
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setname] = useState('');
+  const [user, loading, error] = useAuthState(auth);
   const [review, setreview] = useState('');
   const [ratting, setratting] = useState(3);
   const [hover, sethover] = useState('');
   // const [createdate, setcreatedate] = useState("");
 
   const handleSave = () => {
-    if (!name || !review || !ratting) {
+    if (!review || !ratting) {
       Alert.alert('Please Fill the Fields');
       return;
     }
     const reviewsRef = collection(db, 'Reviews');
     addDoc(reviewsRef, {
-      name: name,
       review: review,
       ratting: ratting,
+      user: user.displayName,
       createdate: Timestamp.now().toDate(),
     })
       .then(() => {
         Alert.alert('Successfully Added!');
         setreview('');
-        setname('');
         setratting(3);
         // setcreatedate("");
       })
@@ -50,16 +51,18 @@ export default function AddReview() {
   return (
     <View>
       <View style={styles.addreview}>
-        <Text style={styles.reviewtitle}>Social distancing is good for public health. Please highlight our </Text>
+        <Text style={styles.reviewtitle}>
+          Social distancing is good for public health. Please highlight about our healthy business service operations{' '}
+        </Text>
         <Text style={styles.addreviewtitle}>Write a Review</Text>
-        <TextInput
+        {/* <TextInput
           style={styles.addname}
           placeholder={'Name'}
           value={name}
           onChangeText={(e) => {
             setname(e);
           }}
-        />
+        /> */}
         <TextInput
           style={styles.typereview}
           placeholder={'Write your experience'}

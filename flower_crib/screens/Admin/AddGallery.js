@@ -1,4 +1,4 @@
-import { View, Text, Button, Alert, StyleSheet, Image, Modal, Pressable } from 'react-native';
+import { View, Text, Button, Alert, StyleSheet, Image, Modal, Pressable, Platform } from 'react-native';
 import React, { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -21,58 +21,120 @@ export default function AddGallery() {
   };
 
   const handleUpload = async () => {
-    const { uri } = image;
-    const filename = uri.substring(uri.lastIndexOf('/') + 1);
-    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-    const task = storage().ref(filename).putFile(uploadUri);
-    // set progress state
-    task.on('state_changed', (snapshot) => {
-      setTransferred(Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000);
-    });
+    // const { uri } = image;
+    // const filename = uri.substring(uri.lastIndexOf('/') + 1);
+    // const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    // const metadata = {
+    //   contentType: image.mimeType,
+    // };
+    // const storageRef = ref(storage, `images/${Date.now()}${image.name}`);
+    // const task = uploadBytesResumable(storageRef, image.file, metadata);
+    // // set progress state
+    // task.on('state_changed', (snapshot) => {
+    //   const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //   console.log('Upload is ' + progress + '% done');
+    //   setProgress(progress);
+    // });
 
+    if (Platform.OS !== 'web') {
+      console.log('you logged in from mobile');
+      // return;
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function (e) {
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', image.uri, true);
+        xhr.send(null);
+      });
+      const storageRef = ref(storage, `images/${Date.now()}${image.name}`);
+
+      const metadata = {
+        contentType: image.mimeType,
+      };
+
+      console.log('this is blob', blob);
+      const upTask = uploadBytesResumable(storageRef, blob);
+      upTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          setProgress(progress);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          setImage({
+            image: '',
+          });
+
+          getDownloadURL(upTask.snapshot.ref).then((image) => {
+            const articleRef = collection(db, 'Gallery');
+            addDoc(articleRef, {
+              imageUrl: image,
+              createAt: Timestamp.now().toDate(),
+            })
+              .then(() => {
+                Alert.alert('Gallery added Successfully');
+                setProgress(0);
+              })
+              .catch((err) => {
+                Alert.alert('Error adding Gallery');
+              });
+          });
+        },
+      );
+    } else {
+      const storageRef = ref(storage, `images/${Date.now()}${image.name}`);
+      const metadata = {
+        contentType: image.mimeType,
+      };
+      const uploadTask = uploadBytesResumable(storageRef, image.file, metadata);
+      console.log(uploadTask);
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          setProgress(progress);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          setImage({
+            image: '',
+          });
+
+          getDownloadURL(uploadTask.snapshot.ref).then((image) => {
+            const articleRef = collection(db, 'Gallery');
+            addDoc(articleRef, {
+              imageUrl: image,
+              createAt: Timestamp.now().toDate(),
+            })
+              .then(() => {
+                Alert.alert('Gallery added Successfully');
+                setProgress(0);
+              })
+              .catch((err) => {
+                Alert.alert('Error adding Gallery');
+              });
+          });
+        },
+      );
+    }
     console.log(image);
     return;
     if (!image) {
       alert('Select an image from photo library');
       return;
     }
-    const storageRef = ref(storage, `images/${Date.now()}${image.name}`);
-    const metadata = {
-      contentType: image.mimeType,
-    };
-    const uploadTask = uploadBytesResumable(storageRef, image.file, metadata);
-    console.log(uploadTask);
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        setProgress(progress);
-      },
-      (err) => {
-        console.log(err);
-      },
-      () => {
-        setImage({
-          image: '',
-        });
-
-        getDownloadURL(uploadTask.snapshot.ref).then((image) => {
-          const articleRef = collection(db, 'Gallery');
-          addDoc(articleRef, {
-            imageUrl: image,
-            createAt: Timestamp.now().toDate(),
-          })
-            .then(() => {
-              Alert.alert('Gallery added Successfully');
-              setProgress(0);
-            })
-            .catch((err) => {
-              Alert.alert('Error adding Gallery');
-            });
-        });
-      },
-    );
   };
 
   return (

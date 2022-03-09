@@ -15,11 +15,74 @@ import {
   ImageBackground,
 } from 'react-native';
 import { auth } from '../../firebase';
+import { db } from '../../firebase';
 import { Icon } from 'react-native-elements';
 import ImgToBase64 from 'react-native-image-base64';
+import { collection, query, orderBy, onSnapshot, doc } from 'firebase/firestore';
 
 const AdminBasicInfo = (props) => {
   const navigation = useNavigation();
+
+  const [customers, setCustomers] = useState([]);
+  const [serviceList, setServiceList] = useState([]);
+  const [serviceMakupList, setMakeupServiceList] = useState([]);
+  const [serviceOthersList, setOthersServiceList] = useState([]);
+
+  useEffect(() => {
+    const customersRef = collection(db, 'UserLogin');
+    const q = query(customersRef, orderBy('date', 'desc'));
+
+    onSnapshot(q, (snapshot) => {
+      const customers = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCustomers(customers);
+      console.log(customers);
+    });
+  }, []);
+
+  useEffect(() => {
+    const serviceRef = collection(db, 'hairstyle');
+    const q = query(serviceRef, orderBy('category', 'asc'));
+
+    onSnapshot(q, (snapshot) => {
+      const services = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setServiceList(services);
+      console.log(services);
+    });
+  }, []);
+
+  useEffect(() => {
+    const serviceMakeupRef = collection(db, 'MakeUp');
+    const q = query(serviceMakeupRef, orderBy('category', 'asc'));
+
+    onSnapshot(q, (snapshot) => {
+      const services = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMakeupServiceList(services);
+      console.log(services);
+    });
+  }, []);
+
+  useEffect(() => {
+    const serviceOthersRef = collection(db, 'Others');
+    const q = query(serviceOthersRef, orderBy('category', 'asc'));
+
+    onSnapshot(q, (snapshot) => {
+      const services = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setOthersServiceList(services);
+      console.log(services);
+    });
+  }, []);
 
   return (
     <>
@@ -27,16 +90,18 @@ const AdminBasicInfo = (props) => {
         <View style={styles.container}>
           <View style={styles.row}>
             <View style={styles.purple}>
-              <TouchableOpacity style={styles.TextLink} onPress={() => navigation.replace('CustomerAppointment')}>
+              <TouchableOpacity style={styles.TextLink} onPress={() => navigation.replace('ViewCustomers')}>
                 <Icon name="people" type="ionicon" color="#cf18e8" size={40} paddingRight={5} />
-                <Text style={styles.color}>36</Text>
+                <Text style={styles.color}>{customers.length}</Text>
                 <Text style={styles.text1}>Total Users</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.purple}>
               <TouchableOpacity style={styles.TextLink} onPress={() => navigation.replace('AdminService')}>
                 <Icon name="settings" type="ionicon" color="#cf18e8" size={30} paddingRight={5} />
-                <Text style={styles.color}>13</Text>
+                <Text style={styles.color}>
+                  {serviceMakupList.length + serviceList.length + serviceOthersList.length}
+                </Text>
                 <Text style={styles.text1}>Total Services</Text>
               </TouchableOpacity>
             </View>

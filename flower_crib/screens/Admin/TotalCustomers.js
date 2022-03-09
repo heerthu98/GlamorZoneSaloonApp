@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { db } from '../../firebase';
 
 import {
   KeyboardAvoidingView,
@@ -16,65 +15,47 @@ import {
 } from 'react-native';
 import { GoBackLeft } from '../../components/styles';
 import { Icon } from 'react-native-elements';
-import { collection, query, orderBy, onSnapshot, doc } from 'firebase/firestore';
-import ViewPastAppointments from './ViewPastAppointments';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebase';
 
-const AdminPastAppointment = () => {
+export default function TotalCustomers({ fullname, address, phoneno, date, id }) {
   const navigation = useNavigation();
 
-  const [appointments, setAppointments] = useState([]);
-  useEffect(() => {
-    const appointmentsRef = collection(db, 'Booking');
-    const q = query(appointmentsRef, orderBy('date', 'asc'));
-
-    onSnapshot(q, (snapshot) => {
-      const appointments = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setAppointments(appointments);
-      console.log(appointments);
-    });
-  }, []);
+  const [user, loading, error] = useAuthState(auth);
 
   return (
     <>
       <StatusBar style="light" />
-      <View style={styles.Innercontainer}>
-        <GoBackLeft>
-          <Icon
-            style={styles.gobackBtn}
-            name="arrow-back-outline"
-            type="ionicon"
-            color="#808080"
-            size={26}
-            onPress={() => navigation.replace('AdminCommon')}
-          />
-        </GoBackLeft>
-        <View style={styles.headercontainer}>
-          <Image style={styles.GlamorZone} resizeMode="cover" source={require('../../assets/img/img2.jpg')} />
-          <Text style={styles.PageTitle}>Total Appointments</Text>
-        </View>
+      <View>
         <ScrollView>
-          {appointments.map((s) => {
-            return (
-              <ViewPastAppointments
-                key={s.id}
-                user={s.user}
-                category={s.category}
-                date={s.date}
-                price={s.price}
-                time={s.time}
-              />
-            );
-          })}
+          <View style={styles.ExtraViewSelect}>
+            <View style={styles.ExtraView}>
+              <Text style={styles.PageTitle1}>Customer Name:</Text>
+              <Text style={styles.PageTitle2}>{fullname}</Text>
+            </View>
+
+            <View style={styles.Line} />
+            <ScrollView>
+              <View style={styles.ExtraViewSub}>
+                <Text style={styles.subTitle2}>DateOfBirth: </Text>
+                <Text style={styles.subTitle3}>{date}</Text>
+              </View>
+              <View style={styles.ExtraViewSub}>
+                <Text style={styles.subTitle2}>Phone No: </Text>
+                <Text style={styles.subTitle3}>{phoneno}</Text>
+              </View>
+              <View style={styles.ExtraViewSub}>
+                <Text style={styles.subTitle2}>Address: </Text>
+                <Text style={styles.subTitle3}>{address}</Text>
+              </View>
+            </ScrollView>
+          </View>
         </ScrollView>
       </View>
     </>
   );
-};
+}
 
-export default AdminPastAppointment;
 const styles = StyleSheet.create({
   Innercontainer: {
     flex: 1,
@@ -85,6 +66,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '28%',
+    marginTop: 50,
+    marginBottom: 10,
   },
   GlamorZone: {
     width: 100,
@@ -94,13 +77,7 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     marginTop: 10,
   },
-  PageTitle: {
-    textAlign: 'left',
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#5185c2',
-    paddingBottom: 5,
-  },
+
   ExtraViewSelect: {
     borderRadius: 2,
     paddingLeft: 10,
@@ -113,7 +90,7 @@ const styles = StyleSheet.create({
     width: '90%',
     marginLeft: 15,
     marginTop: 10,
-    paddingBottom: 15,
+    paddingBottom: 25,
     paddingTop: 5,
   },
   PageTitle: {
@@ -133,14 +110,11 @@ const styles = StyleSheet.create({
   },
   PageTitle2: {
     textAlign: 'left',
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#E56717',
-    paddingBottom: 5,
-    left: 100,
-    top: 17,
-    position: 'absolute',
-    zIndex: 1,
+    color: '#560D00',
+    paddingLeft: 10,
+    paddingTop: 10,
   },
   PageTitle3: {
     textAlign: 'left',
@@ -164,7 +138,7 @@ const styles = StyleSheet.create({
   ExtraView: {
     padding: 3,
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'row',
   },
   ExtraViewSub: {
     display: 'flex',
@@ -197,14 +171,11 @@ const styles = StyleSheet.create({
   },
   subTitle3: {
     textAlign: 'left',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: 'bold',
-    color: '#C11B17',
-    padding: 3,
-    left: 185,
-    top: 15,
-    position: 'absolute',
-    zIndex: 1,
+    color: '#E56717',
+    paddingTop: 15,
+    paddingLeft: 9,
   },
   subTitle4: {
     textAlign: 'left',

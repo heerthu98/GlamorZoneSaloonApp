@@ -5,7 +5,7 @@ import { db, auth } from '../firebase';
 import { Icon } from 'react-native-elements';
 import { Line } from '../components/styles';
 
-export default function ReviewView({ review, name, ratting, createdate, id }) {
+export default function ReviewView({ review, user, ratting, createdate, id }) {
   // const handleDelete = () => {
   //     deleteDoc(doc(db, "Reviews", id))
   //     .then(() => {
@@ -18,7 +18,7 @@ export default function ReviewView({ review, name, ratting, createdate, id }) {
     <ScrollView>
       <View>
         <View style={styles.viewreview}>
-          <Text style={styles.viewname}>{name}</Text>
+          <Text style={styles.viewname}>{user}</Text>
           <View style={styles.viewstar}>
             {[...Array(ratting)].map((star) => {
               return <Icon name="star" type="ionicon" size={20} color={'#ffc107'} value={ratting} />;

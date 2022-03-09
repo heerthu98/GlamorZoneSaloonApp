@@ -181,7 +181,7 @@ const CustomerService = (props) => {
           {modal2 && (
             <View>
               {serviceOthersList.map((s) => {
-                return <ViewService key={s.id} category={s.category} time={s.time} price={s.price} id={s.id} />;
+                return <ViewOtherService key={s.id} category={s.category} time={s.time} price={s.price} id={s.id} />;
               })}
             </View>
           )}

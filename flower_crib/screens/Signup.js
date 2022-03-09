@@ -44,7 +44,7 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [phoneno, setPhoneno] = useState('');
   const [address, setAddress] = useState('');
-  const [date, setDate] = useState(new Date(2000, 0, 1));
+  const [date, setDate] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
@@ -84,7 +84,7 @@ const Signup = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         updateProfile(auth.currentUser, { displayName: fullName });
-        console.log('Registered with:', user.email);
+        // console.log('Registered with:', user.email);
         // var userUID = firebase.auth().currentUser.uid;
         // AddUser(fullName, email, date, userUID);
       })
@@ -203,13 +203,13 @@ const Signup = () => {
                 icon="calendar"
                 placeholder="YYYY - MM - DD"
                 placeholderTextColor={darkLight}
-                value={dob ? dob.toDateString() : ''}
-                onChangeText={(text) => setDate(text)}
-                // value={date}
+                // value={dob ? dob.toDateString() : ''}
                 // onChangeText={(text) => setDate(text)}
-                isDate={true}
-                editable={false}
-                showDatePicker={showDatePicker}
+                value={date}
+                onChangeText={(text) => setDate(text)}
+                // isDate={true}
+                // editable={false}
+                // showDatePicker={showDatePicker}
               />
 
               <MyTextInput
@@ -239,8 +239,6 @@ const Signup = () => {
                 hidePassword={hidePassword}
                 setHidePassword={setHidePassword}
               /> */}
-
-              <MsgBox>...</MsgBox>
 
               <StyledButton
                 onPress={(e) => {

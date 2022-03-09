@@ -39,6 +39,8 @@ import CustomerAbout from './customerAbout';
 import CustomerReview from './CustomerReview';
 import CustomerGallery from './customerGallery';
 
+import CustomerPastAppointment from './CustomerPastAppointment';
+
 import { Styles } from '../components/styles';
 
 const CustomerCommon = () => {
@@ -71,6 +73,8 @@ const CustomerCommon = () => {
       case 3:
         return <CustomerGallery />;
       case 4:
+        return <CustomerPastAppointment />;
+      case 5:
         return <CustomerReview />;
     }
   };
@@ -187,6 +191,17 @@ const CustomerCommon = () => {
                 setIndex(4);
               }}
             >
+              <Text style={styles.TextLinkContent}> History</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.ExtraViewSubCont}>
+            <TouchableOpacity
+              style={styles.TextLink}
+              onPress={() => {
+                setIndex(5);
+              }}
+            >
               <Text style={styles.TextLinkContent}> Review</Text>
             </TouchableOpacity>
           </View>
@@ -262,7 +277,7 @@ const styles = StyleSheet.create({
   },
 
   ExtraViewSubCont: {
-    width: 100,
+    width: 75,
     height: 50,
     display: 'flex',
     justifyContent: 'center',

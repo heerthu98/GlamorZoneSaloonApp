@@ -20,6 +20,7 @@ import Login from './screens/Login';
 import welcome from './screens/welcome';
 import Signup from './screens/Signup';
 import CustomerCommon from './screens/customerCommon';
+import ViewCustomers from './screens/Admin/ViewCustomers';
 
 import AdminCommon from './screens/Admin/AdminCommon';
 import AdminService from './screens/Admin/AdminService';
@@ -27,7 +28,7 @@ import SelectedService from './screens/customerSelected';
 import SelectedDateTime from './screens/customerDateTime';
 import AdminUpcomingAppointment from './screens/Admin/AdminUpcommingAppointment';
 import AdminPastAppointment from './screens/Admin/AdminPastAppointment';
-import CustomerAppointment from './screens/CustomerAppointment';
+
 import { LogBox } from 'react-native';
 import _ from 'lodash';
 
@@ -52,6 +53,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Signup" component={Signup} />
         <Stack.Screen options={{ headerShown: false }} name="AdminCommon" component={AdminCommon} />
         <Stack.Screen options={{ headerShown: false }} name="AdminService" component={AdminService} />
+        <Stack.Screen options={{ headerShown: false }} name="ViewCustomers" component={ViewCustomers} />
         <Stack.Screen
           options={{ headerShown: false }}
           name="AdminUpcomingAppointment"
@@ -61,8 +63,6 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="SelectedService" component={SelectedService} />
         <Stack.Screen options={{ headerShown: false }} name="SelectedDateTime" component={SelectedDateTime} />
         <Stack.Screen options={{ headerShown: false }} name="CustomerCommon" component={CustomerCommon} />
-
-        <Stack.Screen options={{ headerShown: false }} name="CustomerAppointment" component={CustomerAppointment} />
       </Stack.Navigator>
     </NavigationContainer>
   );

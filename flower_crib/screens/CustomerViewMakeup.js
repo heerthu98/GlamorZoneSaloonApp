@@ -35,7 +35,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 // import { TextInput } from 'react-native-gesture-handler';
 
-const timeSlots = ['10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
+const timeSlotsM = ['10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
 
 export default function ViewMakeup({ category, time, price, id }) {
   const navigation = useNavigation();
@@ -71,13 +71,13 @@ export default function ViewMakeup({ category, time, price, id }) {
   const [date, setDate] = useState(new Date());
   const [selectedValue, setSelectedValue] = useState('');
 
-  const [availableSlots, setAvailableSlots] = useState(timeSlots);
+  const [availableSlots, setAvailableSlots] = useState(timeSlotsM);
 
   useEffect(() => {
     const bookingRef = collection(db, 'Booking');
     const q = query(bookingRef, where('date', '==', date));
     onSnapshot(q, (snapshot) => {
-      const slots = timeSlots.filter((slot) => {
+      const slots = timeSlotsM.filter((slot) => {
         return !snapshot.docs.map((doc) => doc.data().time).includes(slot);
       });
       setAvailableSlots(slots);
@@ -91,7 +91,7 @@ export default function ViewMakeup({ category, time, price, id }) {
       time: selectedValue,
       category: category,
       price: price,
-      user: displayName,
+      user: user.displayName,
     };
     if (date == '') {
       alert('Please select the date');
