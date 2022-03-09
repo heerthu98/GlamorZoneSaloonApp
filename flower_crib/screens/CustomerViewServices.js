@@ -74,6 +74,7 @@ export default function ViewService({ category, time, price, id }) {
   const [availableSlots, setAvailableSlots] = useState(timeSlotsH);
 
   useEffect(() => {
+    console.log(user);
     const bookingRef = collection(db, 'Booking');
     const q = query(bookingRef, where('date', '==', date));
     onSnapshot(q, (snapshot) => {
@@ -91,6 +92,7 @@ export default function ViewService({ category, time, price, id }) {
       time: selectedValue,
       category: category,
       price: price,
+      email: user.email,
       user: user.displayName,
     };
     if (date == '') {

@@ -56,18 +56,20 @@ const AdminPastAppointment = () => {
           <Text style={styles.PageTitle}>Total Appointments</Text>
         </View>
         <ScrollView>
-          {appointments.map((s) => {
-            return (
-              <ViewPastAppointments
-                key={s.id}
-                user={s.user}
-                category={s.category}
-                date={s.date}
-                price={s.price}
-                time={s.time}
-              />
-            );
-          })}
+          {appointments
+            .filter((d) => new Date(d.date) - new Date() > 0)
+            .map((s) => {
+              return (
+                <ViewPastAppointments
+                  key={s.id}
+                  user={s.user}
+                  category={s.category}
+                  date={s.date}
+                  price={s.price}
+                  time={s.time}
+                />
+              );
+            })}
         </ScrollView>
       </View>
     </>

@@ -13,64 +13,48 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import CustomerViewPastAppointments from './CustomerViewPastAppointments';
-import { GoBackLeft } from '../components/styles';
+
 import { Icon } from 'react-native-elements';
-import { collection, query, orderBy, onSnapshot, doc, where } from 'firebase/firestore';
-import { db, auth } from '../firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
 
-const CustomerPastAppointment = () => {
+export default function CustomerViewPastAppointments({ user, date, category, price, time, id }) {
   const navigation = useNavigation();
-  const [user, loading, error] = useAuthState(auth);
-  const [appointments, setAppointments] = useState([]);
-  useEffect(() => {
-    const appointmentsRef = collection(db, 'Booking');
-    const q = query(appointmentsRef, where('email', '==', user.email), orderBy('date', 'asc'));
 
-    onSnapshot(q, (snapshot) => {
-      const appointments = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setAppointments(appointments);
-      console.log(appointments);
-    });
-  }, []);
   return (
     <>
       <StatusBar style="light" />
-      <View style={styles.Innercontainer}>
-        <View style={styles.headercontainer}>
-          <Text style={styles.PageTitle}>Total Appointments</Text>
-        </View>
+      <View>
         <ScrollView>
-          {appointments
-            .filter((d) => new Date(d.date) - new Date() > 0)
-            .map((s) => {
-              return (
-                <CustomerViewPastAppointments
-                  key={s.id}
-                  user={s.user}
-                  category={s.category}
-                  date={s.date}
-                  price={s.price}
-                  time={s.time}
-                />
-              );
-            })}
+          <View style={styles.ExtraViewSelect}>
+            <View style={styles.ExtraView}>
+              <Text style={styles.PageTitle1}>Customer Name: {user} </Text>
+              <Text style={styles.PageTitle1}>Date: {date}</Text>
+            </View>
+            <View style={styles.ExtraView}>
+              {/* <View style={styles.ExtraViewSub}> */}
+              <Text style={styles.PageTitle1}>Services</Text>
+              <Text style={styles.PageTitle2}>Total: Rs.3500 </Text>
+            </View>
+            <View style={styles.Line} />
+            <ScrollView>
+              <View style={styles.ExtraViewSub}>
+                <Text style={styles.subTitle2}>{category}</Text>
+                <Text style={styles.subTitle3}>Rs.{price}</Text>
+                <Text style={styles.subTitle4}>{time}</Text>
+              </View>
+            </ScrollView>
+          </View>
         </ScrollView>
       </View>
     </>
   );
-};
+}
 
-export default CustomerPastAppointment;
 const styles = StyleSheet.create({
   Innercontainer: {
     flex: 1,
     width: '100%',
   },
+
   headercontainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -90,15 +74,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#5185c2',
     paddingBottom: 5,
-  },
-  WelcomeImage: {
-    height: '40%',
-    width: '100%',
-  },
-  headercontainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#dfe2f2',
   },
   ExtraViewSelect: {
     borderRadius: 2,
@@ -136,7 +111,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#E56717',
     paddingBottom: 5,
-    left: 100,
+    left: 180,
     top: 17,
     position: 'absolute',
     zIndex: 1,

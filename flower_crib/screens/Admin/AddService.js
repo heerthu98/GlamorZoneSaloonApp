@@ -20,7 +20,7 @@ export default function AddService({ category, time, price, id }) {
       <Icon name="md-arrow-forward" type="ionicon" color="#BB6286" size={25} />
       <Text style={styles.subTitle2}>{category}</Text>
       <Text style={styles.subTitle3}>Rs.{price}</Text>
-      <Text style={styles.subTitle4}>{time}min</Text>
+      <Text style={styles.subTitle4}>{time}hr</Text>
       <View style={styles.LeftIcon}>
         <Icon
           name="md-close-circle"

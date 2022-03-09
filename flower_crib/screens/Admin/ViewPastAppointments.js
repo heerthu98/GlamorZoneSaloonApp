@@ -13,7 +13,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { GoBackLeft } from '../../components/styles';
+
 import { Icon } from 'react-native-elements';
 
 export default function ViewPastAppointments({ user, date, category, price, time, id }) {
